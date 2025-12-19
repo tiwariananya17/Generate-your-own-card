@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Ultimate Dreamy Card Maker ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fad0c4, #a8edea, #fed6e3, #d299c2);
+            background-size: 600% 600%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120,119,198,0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,119,198,0.3) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+            animation: float 25s ease-in-out infinite;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+            gap: 2rem;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #feca57, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(255, 107, 157, 0.6);
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 15px rgba(255,107,157,0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(255,107,157,0.9)); }
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .theme-selector, .font-selector {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            background: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #6b46c1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-selector:hover, .font-selector:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .generator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.15),
+                0 0 0 1px rgba(255,255,255,0.2);
+            max-width: 500px;
+            width: 100%;
+            animation: slideUp 1s ease-out;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #6b46c1;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.95);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 0 3px rgba(255,107,157,0.2);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            min-height: 80px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .file-upload {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 1rem;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            color: white;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(255,154,158,0.4);
+        }
+
+        .file-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,154,158,0.6);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 100px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-top: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .generate-btn, .download-btn {
+            flex: 1;
+            padding: 1.25rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            box-shadow: 0 15px 35px rgba(255,107,157,0.4);
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            box-shadow: 0 15px 35px rgba(78,205,196,0.4);
+            display: none;
+        }
+
+        .generate-btn:hover, .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .business-card {
+            margin: 2rem 0;
+            border-radius: 25px;
+            padding: 2.5rem 2rem;
+            max-width: 380px;
+            width: 100%;
+            box-shadow: 
+                0 35px 70px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.1);
+            position: relative;
+            animation: cardFloat 5s ease-in-out infinite;
+            transform-style: preserve-3d;
+            display: none;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px) rotateX(0deg); }
+            50% { transform: translateY(-12px) rotateX(3deg); }
+        }
+
+        .card-content {
+            text-align: center;
+        }
+
+        .card-image {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 5px solid rgba(255,255,255,0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .card-name {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.4);
+        }
+
+        .card-title {
+            color: rgba(255,255,255,0.95);
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+        }
+
+        .card-details {
+            list-style: none;
+            text-align: left;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .card-details li {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .card-details li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .theme-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .theme-pink   { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); }
+        .theme-blue   { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        .theme-golden { background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%); }
+
+        .font-playfair .card-name { font-family: 'Playfair Display', serif; }
+        .font-roboto  .card-name { font-family: 'Roboto', sans-serif; }
+        .font-dancing .card-name { font-family: 'Dancing Script', cursive; }
+
+        /* existing sliders */
+        .sliders {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .slider-group label {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+        }
+
+        /* NEW: color & style controls */
+        .style-row {
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .style-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .style-group label {
+            font-size: 0.85rem;
+        }
+
+        .style-group input[type="color"] {
+            width: 100%;
+            height: 36px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.6);
+            padding: 0;
+        }
+
+        .style-group select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.95);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            .business-card, .business-card * { visibility: visible; }
+            .business-card { position: absolute; left: 0; top: 0; margin: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .controls { flex-direction: column; align-items: center; }
+            .generator { padding: 2rem; margin: 1rem; }
+            .btn-group { flex-direction: column; }
+            .sliders   { grid-template-columns: 1fr; }
+            .style-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Generate Your Own Card ✨</h1>
+        
+        <div class="controls">
+            <select class="theme-selector" id="themeSelect" onchange="changeTheme()">
+                <option value="purple">🌌 Purple Dream</option>
+                <option value="pink">💖 Pink Bliss</option>
+                <option value="blue">🌊 Ocean Wave</option>
+                <option value="golden">⭐ Golden Glow</option>
+            </select>
+            
+            <select class="font-selector" id="fontSelect" onchange="changeFont()">
+                <option value="dancing">✨ Dancing Script</option>
+                <option value="playfair">📜 Playfair Display</option>
+                <option value="roboto">⚡ Roboto Modern</option>
+            </select>
+        </div>
+
+        <div class="generator">
+            <div class="form-group">
+                <label for="name">Full Name ✨</label>
+                <input type="text" id="name" placeholder="Your magical name..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">Job Title 🌟</label>
+                <input type="text" id="title" placeholder="Your enchanting role...">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email 📧</label>
+                <input type="email" id="email" placeholder="magic@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone 📱</label>
+                <input type="tel" id="phone" placeholder="+91 98765 43210">
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address 🏠</label>
+                <textarea id="address" placeholder="Bicholi Hapsi, Indore, Madhya Pradesh, India"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Profile Image 🖼️</label>
+                <div class="file-upload">
+                    <input type="file" id="imageUpload" class="file-input" accept="image/*">
+                    <label for="imageUpload" class="file-label">✨ Choose Magical Image</label>
+                </div>
+                <img id="imagePreview" class="image-preview" alt="Preview">
+            </div>
+
+            <!-- existing sliders -->
+            <div class="sliders">
+                <div class="slider-group">
+                    <label for="nameSize">Name Size</label>
+                    <input type="range" id="nameSize" min="18" max="36" value="28">
+                </div>
+                <div class="slider-group">
+                    <label for="titleSize">Title Size</label>
+                    <input type="range" id="titleSize" min="14" max="26" value="18">
+                </div>
+                <div class="slider-group">
+                    <label for="detailSize">Details Size</label>
+                    <input type="range" id="detailSize" min="10" max="18" value="14">
+                </div>
+                <div class="slider-group">
+                    <label for="imageSize">Image Size</label>
+                    <input type="range" id="imageSize" min="60" max="130" value="90">
+                </div>
+                <div class="slider-group">
+                    <label for="cardWidth">Card Width</label>
+                    <input type="range" id="cardWidth" min="260" max="480" value="380">
+                </div>
+            </div>
+
+            <!-- NEW: font color + style -->
+            <div class="style-row">
+                <div class="style-group">
+                    <label for="nameColor">Name Color</label>
+                    <input type="color" id="nameColor" value="#ffffff">
+                </div>
+                <div class="style-group">
+                    <label for="titleColor">Title Color</label>
+                    <input type="color" id="titleColor" value="#ffe4f5">
+                </div>
+                <div class="style-group">
+                    <label for="detailColor">Details Color</label>
+                    <input type="color" id="detailColor" value="#ffffff">
+                </div>
+                <div class="style-group">
+                    <label for="textStyle">Text Style</label>
+                    <select id="textStyle">
+                        <option value="normal">Normal</option>
+                        <option value="italic">Italic</option>
+                        <option value="uppercase">Uppercase</option>
+                        <option value="linear-gradient">linear-gradient</option>
+                        <option value="text">text</option>
+                        <option value="transparent">transparent</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="generate-btn" onclick="generateCard()">✨ Generate Card ✨</button>
+                <button class="download-btn" id="downloadBtn" onclick="downloadCard()">💾 Download Card</button>
+            </div>
+        </div>
+        
+        <div id="cardOutput" class="business-card theme-purple font-dancing">
+            <div class="card-content">
+                <div class="card-image" id="cardImage">✨</div>
+                <div class="card-name" id="cardName">Your Name</div>
+                <div class="card-title" id="cardTitle">Magical Professional</div>
+                <ul class="card-details">
+                    <li id="cardEmail">✉️ email@example.com</li>
+                    <li id="cardPhone">📱 +1234567890</li>
+                    <li id="cardAddress">🏠 Your Address</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTheme = 'purple';
+        let currentFont = 'dancing';
+        let cardImageSrc = '';
+
+        // Image preview
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                    cardImageSrc = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function changeTheme() {
+            currentTheme = document.getElementById('themeSelect').value;
+            const card = document.getElementById('cardOutput');
+            card.className = `business-card theme-${currentTheme} font-${currentFont}`;
+        }
+
+        function changeFont() {
+            currentFont = document.getElementById('fontSelect').value;
+            const card = document.getElementById('cardOutput');
+            card.className = `business-card theme-${currentTheme} font-${currentFont}`;
+        }
+
+        function applySizesAndStyles() {
+            const nameSize   = document.getElementById('nameSize').value;
+            const titleSize  = document.getElementById('titleSize').value;
+            const detailSize = document.getElementById('detailSize').value;
+            const imageSize  = document.getElementById('imageSize').value;
+            const cardWidth  = document.getElementById('cardWidth').value;
+
+            const nameColor   = document.getElementById('nameColor').value;
+            const titleColor  = document.getElementById('titleColor').value;
+            const detailColor = document.getElementById('detailColor').value;
+            const textStyle   = document.getElementById('textStyle').value;
+
+            // Sizes
+            const nameEl  = document.getElementById('cardName');
+            const titleEl = document.getElementById('cardTitle');
+
+            nameEl.style.fontSize  = nameSize + 'px';
+            titleEl.style.fontSize = titleSize + 'px';
+
+            document.querySelectorAll('.card-details li').forEach(li => {
+                li.style.fontSize = detailSize + 'px';
+            });
+
+            const cardImage = document.getElementById('cardImage');
+            cardImage.style.width  = imageSize + 'px';
+            cardImage.style.height = imageSize + 'px';
+
+            const cardOutput = document.getElementById('cardOutput');
+            cardOutput.style.maxWidth = cardWidth + 'px';
+
+            // Colors
+            nameEl.style.color  = nameColor;
+            titleEl.style.color = titleColor;
+            document.querySelectorAll('.card-details li').forEach(li => {
+                li.style.color = detailColor;
+            });
+
+            // Text style
+            const allTextEls = [nameEl, titleEl, ...document.querySelectorAll('.card-details li')];
+            allTextEls.forEach(el => {
+                el.style.fontStyle      = (textStyle === 'italic')   ? 'italic' : 'normal';
+                el.style.textTransform  = (textStyle === 'uppercase')? 'uppercase' : 'none';
+                el.style.background = "linear-gradient(90deg, #6366f1, #ec4899)";
+                el.style.webkitBackgroundClip = "text";
+                el.style.webkitTextFillColor = "transparent";
+
+
+            });
+        }
+
+        ['nameSize','titleSize','detailSize','imageSize','cardWidth',
+         'nameColor','titleColor','detailColor','textStyle'
+        ].forEach(id => {
+            document.getElementById(id).addEventListener('input', applySizesAndStyles);
+            document.getElementById(id).addEventListener('change', applySizesAndStyles);
+        });
+
+        function generateCard() {
+            const name    = document.getElementById('name').value    || 'Your Name';
+            const title   = document.getElementById('title').value   || 'Magical Professional';
+            const email   = document.getElementById('email').value   || 'email@example.com';
+            const phone   = document.getElementById('phone').value   || '+1234567890';
+            const address = document.getElementById('address').value || 'Your Address';
+            
+            document.getElementById('cardName').textContent   = name;
+            document.getElementById('cardTitle').textContent  = title;
+            document.getElementById('cardEmail').textContent  = `✉️ ${email}`;
+            document.getElementById('cardPhone').textContent  = `📱 ${phone}`;
+            document.getElementById('cardAddress').textContent= `🏠 ${address}`;
+            
+            const cardImage = document.getElementById('cardImage');
+            if (cardImageSrc) {
+                cardImage.style.backgroundImage = `url(${cardImageSrc})`;
+                cardImage.style.backgroundSize  = 'cover';
+                cardImage.innerHTML = '';
+            } else {
+                cardImage.innerHTML = '✨';
+                cardImage.style.backgroundImage = 'none';
+            }
+            
+            document.getElementById('cardOutput').style.display  = 'block';
+            document.getElementById('downloadBtn').style.display = 'block';
+            applySizesAndStyles();
+            createSparkles();
+        }
+
+        function downloadCard() {
+            const card = document.getElementById('cardOutput');
+            html2canvas(card, {
+                scale: 3,
+                useCORS: true,
+                backgroundColor: null,
+                allowTaint: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'dreamy-business-card.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        function createSparkles() {
+            const card = document.getElementById('cardOutput');
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.style.cssText = `
+                        position: absolute;
+                        width: 8px; height: 8px;
+                        background: rgba(255,255,255,0.9);
+                        border-radius: 50%;
+                        left: ${Math.random() * 100}%;
+                        top: ${Math.random() * 100}%;
+                        animation: sparkle 2s linear infinite;
+                        pointer-events: none;
+                        z-index: 10;
+                    `;
+                    card.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 150);
+            }
+        }
+
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.target.closest('textarea')) {
+                generateCard();
+            }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>
